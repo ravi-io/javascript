@@ -1,0 +1,1843 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Full Stack Roadmap — My Progress</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #080810;
+        --surface: #0f0f1a;
+        --card: #13131f;
+        --border: #1e1e30;
+        --border-light: #2a2a40;
+        --text: #e2e2f0;
+        --muted: #5a5a7a;
+        --accent-js: #f7df1e;
+        --accent-react: #61dafb;
+        --accent-next: #3ecf8e;
+        --accent-node: #f472b6;
+        --accent-db: #a78bfa;
+        --accent-dev: #fb923c;
+        --accent-ai: #c084fc;
+        --must: #ef4444;
+        --good: #f59e0b;
+        --nice: #10b981;
+        --font-head: 'Syne', sans-serif;
+        --font-mono: 'Space Mono', monospace;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-mono);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* ── NOISE OVERLAY ── */
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* ── HEADER ── */
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(8, 8, 16, 0.92);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+        padding: 0 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 60px;
+      }
+      .logo {
+        font-family: var(--font-head);
+        font-size: 15px;
+        font-weight: 800;
+        letter-spacing: -0.3px;
+        color: var(--text);
+      }
+      .logo span {
+        color: var(--accent-js);
+      }
+
+      .header-stats {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .total-badge {
+        font-size: 11px;
+        color: var(--muted);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        padding: 4px 10px;
+        border-radius: 20px;
+      }
+      .total-badge b {
+        color: var(--accent-next);
+      }
+
+      /* ── GLOBAL PROGRESS BAR ── */
+      .global-progress {
+        position: sticky;
+        top: 60px;
+        z-index: 99;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+        padding: 10px 24px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .gp-label {
+        font-size: 10px;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      .gp-track {
+        flex: 1;
+        height: 5px;
+        background: var(--border);
+        border-radius: 99px;
+        overflow: hidden;
+      }
+      .gp-fill {
+        height: 100%;
+        border-radius: 99px;
+        background: linear-gradient(
+          90deg,
+          var(--accent-js),
+          var(--accent-react),
+          var(--accent-next)
+        );
+        transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        width: 0%;
+      }
+      .gp-pct {
+        font-size: 11px;
+        color: var(--accent-next);
+        font-weight: 700;
+        min-width: 34px;
+        text-align: right;
+      }
+
+      /* ── LAYOUT ── */
+      .container {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 28px 20px 80px;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* ── FILTER BAR ── */
+      .filter-bar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 24px;
+      }
+      .filter-btn {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        padding: 5px 12px;
+        border-radius: 20px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--muted);
+        cursor: pointer;
+        transition: all 0.15s;
+        letter-spacing: 0.5px;
+      }
+      .filter-btn:hover,
+      .filter-btn.active {
+        border-color: var(--accent-js);
+        color: var(--accent-js);
+        background: rgba(247, 223, 30, 0.06);
+      }
+      .filter-btn.active {
+        font-weight: 700;
+      }
+      .filter-sep {
+        width: 1px;
+        height: 20px;
+        background: var(--border);
+        margin: 0 4px;
+      }
+      .search-wrap {
+        margin-left: auto;
+        position: relative;
+      }
+      .search-input {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        color: var(--text);
+        padding: 6px 12px 6px 30px;
+        border-radius: 20px;
+        width: 200px;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      .search-input:focus {
+        border-color: var(--accent-js);
+      }
+      .search-icon {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 12px;
+        color: var(--muted);
+        pointer-events: none;
+      }
+
+      /* ── SECTION ── */
+      .section {
+        margin-bottom: 20px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .section.hidden {
+        display: none;
+      }
+
+      .section-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 18px;
+        cursor: pointer;
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        user-select: none;
+        transition: background 0.15s;
+      }
+      .section-header:hover {
+        background: var(--card);
+      }
+
+      .section-accent {
+        width: 4px;
+        height: 32px;
+        border-radius: 2px;
+        flex-shrink: 0;
+      }
+      .section-title {
+        font-family: var(--font-head);
+        font-size: 14px;
+        font-weight: 700;
+        flex: 1;
+      }
+      .section-meta {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .section-prog {
+        font-size: 10px;
+        color: var(--muted);
+      }
+      .section-prog b {
+        color: var(--text);
+      }
+      .mini-bar {
+        width: 80px;
+        height: 4px;
+        background: var(--border);
+        border-radius: 99px;
+        overflow: hidden;
+      }
+      .mini-fill {
+        height: 100%;
+        border-radius: 99px;
+        transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .chevron {
+        font-size: 10px;
+        color: var(--muted);
+        transition: transform 0.25s;
+      }
+      .section.collapsed .chevron {
+        transform: rotate(-90deg);
+      }
+
+      /* ── TOPIC LIST ── */
+      .topic-list {
+        background: var(--card);
+      }
+      .section.collapsed .topic-list {
+        display: none;
+      }
+
+      /* group label */
+      .group-label {
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 1.2px;
+        color: var(--muted);
+        padding: 12px 18px 4px;
+        text-transform: uppercase;
+      }
+
+      /* topic row */
+      .topic-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 18px;
+        border-bottom: 1px solid var(--border);
+        transition: background 0.12s;
+        cursor: pointer;
+      }
+      .topic-row:last-child {
+        border-bottom: none;
+      }
+      .topic-row:hover {
+        background: rgba(255, 255, 255, 0.025);
+      }
+      .topic-row.done {
+        opacity: 0.45;
+      }
+      .topic-row.done .topic-text {
+        text-decoration: line-through;
+        color: var(--muted);
+      }
+
+      .topic-check {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+        border: 1.5px solid var(--border-light);
+        border-radius: 4px;
+        background: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.15s;
+        cursor: pointer;
+      }
+      .topic-row.done .topic-check {
+        background: var(--accent-next);
+        border-color: var(--accent-next);
+      }
+      .topic-check::after {
+        content: '';
+        display: none;
+        width: 9px;
+        height: 5px;
+        border-left: 2px solid #000;
+        border-bottom: 2px solid #000;
+        transform: rotate(-45deg) translateY(-1px);
+      }
+      .topic-row.done .topic-check::after {
+        display: block;
+      }
+
+      .level-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .level-dot.must {
+        background: var(--must);
+      }
+      .level-dot.good {
+        background: var(--good);
+      }
+      .level-dot.nice {
+        background: var(--nice);
+      }
+
+      .topic-text {
+        flex: 1;
+        font-size: 11.5px;
+        line-height: 1.4;
+        color: var(--text);
+      }
+      .topic-note {
+        font-size: 9px;
+        color: var(--muted);
+        display: block;
+        margin-top: 1px;
+      }
+
+      .level-tag {
+        font-size: 8px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        padding: 2px 7px;
+        border-radius: 10px;
+        flex-shrink: 0;
+      }
+      .level-tag.must {
+        background: rgba(239, 68, 68, 0.15);
+        color: var(--must);
+      }
+      .level-tag.good {
+        background: rgba(245, 158, 11, 0.15);
+        color: var(--good);
+      }
+      .level-tag.nice {
+        background: rgba(16, 185, 129, 0.15);
+        color: var(--nice);
+      }
+
+      .diff-tag {
+        font-size: 8px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        padding: 2px 7px;
+        border-radius: 10px;
+        flex-shrink: 0;
+        text-transform: uppercase;
+      }
+      .diff-tag.basic {
+        background: rgba(59, 130, 246, 0.15);
+        color: #3b82f6;
+      }
+      .diff-tag.intermediate {
+        background: rgba(167, 139, 250, 0.15);
+        color: #a78bfa;
+      }
+      .diff-tag.advanced {
+        background: rgba(236, 72, 153, 0.15);
+        color: #ec4899;
+      }
+
+      /* ── ADD TOPIC ROW ── */
+      .add-topic-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 18px 12px;
+        background: var(--card);
+      }
+      .add-input {
+        flex: 1;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        background: var(--surface);
+        border: 1px dashed var(--border-light);
+        color: var(--text);
+        padding: 6px 10px;
+        border-radius: 6px;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      .add-input:focus {
+        border-color: var(--accent-js);
+        border-style: solid;
+      }
+      .add-input::placeholder {
+        color: var(--muted);
+      }
+      .add-level-select {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        background: var(--surface);
+        border: 1px solid var(--border-light);
+        color: var(--muted);
+        padding: 6px 8px;
+        border-radius: 6px;
+        outline: none;
+        cursor: pointer;
+      }
+      .add-btn {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        font-weight: 700;
+        background: rgba(247, 223, 30, 0.1);
+        color: var(--accent-js);
+        border: 1px solid rgba(247, 223, 30, 0.25);
+        padding: 6px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .add-btn:hover {
+        background: rgba(247, 223, 30, 0.18);
+      }
+
+      /* ── LEGEND ── */
+      .legend {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        padding: 0 0 20px;
+        flex-wrap: wrap;
+      }
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 9px;
+        color: var(--muted);
+      }
+      .legend-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+      }
+
+      /* ── EMPTY STATE ── */
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .empty-state .big {
+        font-size: 32px;
+        margin-bottom: 10px;
+      }
+
+      /* ── RESET BTN ── */
+      .danger-btn {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        background: transparent;
+        color: var(--muted);
+        border: 1px solid var(--border);
+        padding: 4px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .danger-btn:hover {
+        color: var(--must);
+        border-color: var(--must);
+      }
+
+      /* scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--bg);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border-light);
+        border-radius: 3px;
+      }
+
+      @media (max-width: 600px) {
+        .search-wrap {
+          margin-left: 0;
+          width: 100%;
+        }
+        .search-input {
+          width: 100%;
+        }
+        .filter-bar {
+          gap: 6px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="logo">
+        full<span>.</span>stack
+        <span style="color: var(--muted)">//</span> roadmap
+      </div>
+      <div class="header-stats">
+        <div class="total-badge">
+          done: <b id="hdr-done">0</b> / <b id="hdr-total">0</b>
+        </div>
+        <button class="danger-btn" onclick="resetAll()">reset all</button>
+      </div>
+    </header>
+
+    <div class="global-progress">
+      <span class="gp-label">overall progress</span>
+      <div class="gp-track"><div class="gp-fill" id="gp-fill"></div></div>
+      <span class="gp-pct" id="gp-pct">0%</span>
+    </div>
+
+    <div class="container">
+      <div class="legend">
+        <div class="legend-item">
+          <span class="diff-tag basic" style="margin: 0; padding: 2px 6px"
+            >basic</span
+          >
+          Basic
+        </div>
+        <div class="legend-item">
+          <span
+            class="diff-tag intermediate"
+            style="margin: 0; padding: 2px 6px"
+            >intermediate</span
+          >
+          Intermediate
+        </div>
+        <div class="legend-item">
+          <span class="diff-tag advanced" style="margin: 0; padding: 2px 6px"
+            >advanced</span
+          >
+          Advanced
+        </div>
+        <div class="filter-sep"></div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background: var(--must)"></div>
+          Must Know
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background: var(--good)"></div>
+          Good to Have
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background: var(--nice)"></div>
+          Nice to Have
+        </div>
+        <div style="flex: 1"></div>
+        <span style="font-size: 9px; color: var(--muted)"
+          >click topic to mark done · add custom topics per section</span
+        >
+      </div>
+
+      <div class="filter-bar">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="pending">Pending</button>
+        <button class="filter-btn" data-filter="done">Done ✓</button>
+        <div class="filter-sep"></div>
+        <button class="filter-btn" data-filter="basic">Basic</button>
+        <button class="filter-btn" data-filter="intermediate">
+          Intermediate
+        </button>
+        <button class="filter-btn" data-filter="advanced">Advanced</button>
+        <div class="filter-sep"></div>
+        <button class="filter-btn" data-filter="must">Must Know</button>
+        <button class="filter-btn" data-filter="good">Good to Have</button>
+        <button class="filter-btn" data-filter="nice">Nice to Have</button>
+        <div class="search-wrap">
+          <span class="search-icon">⌕</span>
+          <input
+            class="search-input"
+            id="search"
+            placeholder="search topics..."
+            oninput="applyFilters()"
+          />
+        </div>
+      </div>
+
+      <div id="sections-root"></div>
+    </div>
+    <script>
+      // ═══════════════════════════════════════════════════════════════
+      //  DATA
+      // ═══════════════════════════════════════════════════════════════
+      const SECTIONS = [
+        {
+          id: 'js',
+          title: 'JavaScript — Foundation',
+          accent: 'var(--accent-js)',
+          groups: [
+            {
+              label: 'Core Fundamentals',
+              diff: 'basic',
+              topics: [
+                {
+                  t: 'var / let / const — hoisting, TDZ, scope differences',
+                  l: 'must',
+                },
+                {
+                  t: 'Data types — primitives vs reference, type coercion',
+                  l: 'must',
+                },
+                {
+                  t: "typeof vs instanceof — typeof null === 'object' gotcha, instanceof across frames, reliable type-checking patterns",
+                  l: 'must',
+                  d: 'intermediate',
+                },
+                { t: '== vs === — implicit coercion rules', l: 'must' },
+                {
+                  t: "Truthy / Falsy values — 0, '', null, undefined, NaN, false",
+                  l: 'must',
+                },
+                {
+                  t: 'Spread, rest, optional chaining (?.), nullish coalescing (??)',
+                  l: 'must',
+                  d: 'intermediate',
+                },
+                {
+                  t: 'Short-circuit evaluation — && / || as control flow, side effects, differences from ??',
+                  l: 'good',
+                },
+                {
+                  t: 'Template literals, destructuring, shorthand properties',
+                  l: 'must',
+                },
+                { t: 'for...of vs for...in — when to use which', l: 'must' },
+              ],
+            },
+            {
+              label: 'Array & Object Methods',
+              diff: 'basic',
+              topics: [
+                {
+                  t: 'Array methods — flat(), flatMap(), Array.from() (flattening, mapping, creating from iterables)',
+                  l: 'must',
+                  d: 'intermediate',
+                },
+                {
+                  t: 'Object methods — Object.keys(), Object.values(), Object.entries(), Object.fromEntries()',
+                  l: 'must',
+                },
+              ],
+            },
+            {
+              label: 'Functions — Interview Favorites',
+              diff: 'intermediate',
+              topics: [
+                {
+                  t: 'Function declaration vs expression vs arrow function',
+                  l: 'must',
+                  d: 'basic',
+                },
+                {
+                  t: 'Closures — deeply understand with real use cases',
+                  l: 'must',
+                  n: 'Counter, memoization, private variables',
+                },
+                {
+                  t: 'IIFE — Immediately Invoked Function Expression',
+                  l: 'must',
+                  d: 'basic',
+                },
+                {
+                  t: 'Higher-Order Functions — map, filter, reduce (from scratch)',
+                  l: 'must',
+                },
+                { t: 'Pure functions, side effects, immutability', l: 'must' },
+                {
+                  t: 'Default params, arguments object',
+                  l: 'must',
+                  d: 'basic',
+                },
+                {
+                  t: 'Currying and partial application',
+                  l: 'good',
+                  d: 'advanced',
+                },
+                { t: 'Function composition', l: 'good', d: 'advanced' },
+                { t: 'Memoization — implement manually', l: 'good' },
+                {
+                  t: 'Generator functions (function*) and iterators',
+                  l: 'nice',
+                  d: 'advanced',
+                },
+              ],
+            },
+            {
+              label: 'Scope, this, Prototype',
+              diff: 'intermediate',
+              topics: [
+                { t: 'Lexical scope, scope chain', l: 'must' },
+                {
+                  t: "'this' keyword — 4 rules: default, implicit, explicit, new",
+                  l: 'must',
+                },
+                {
+                  t: 'call(), apply(), bind() — implement bind manually',
+                  l: 'must',
+                },
+                {
+                  t: 'Prototype chain — how JS inheritance really works',
+                  l: 'must',
+                  d: 'advanced',
+                },
+                {
+                  t: '__proto__ vs prototype vs Object.getPrototypeOf',
+                  l: 'must',
+                },
+                {
+                  t: 'Object.create(), Object.assign(), Object.freeze()',
+                  l: 'must',
+                },
+                {
+                  t: 'Class syntax — constructor, extends, super, static',
+                  l: 'must',
+                },
+                {
+                  t: 'Private class fields (#field)',
+                  l: 'good',
+                  d: 'advanced',
+                },
+              ],
+            },
+            {
+              label: 'Async JavaScript',
+              diff: 'intermediate',
+              topics: [
+                {
+                  t: 'Event Loop — Call Stack, Web APIs, Callback Queue, Microtask Queue',
+                  l: 'must',
+                  n: 'Draw this. Most important concept for interviews',
+                  d: 'advanced',
+                },
+                {
+                  t: "Callbacks — callback hell, why it's bad",
+                  l: 'must',
+                  d: 'basic',
+                },
+                { t: 'Promises — states, chaining .then().catch()', l: 'must' },
+                {
+                  t: 'Promise.all, Promise.race, Promise.allSettled, Promise.any',
+                  l: 'must',
+                },
+                {
+                  t: "async/await — it's still Promises underneath",
+                  l: 'must',
+                },
+                {
+                  t: 'Error handling in async code — try/catch, .catch()',
+                  l: 'must',
+                },
+                {
+                  t: 'setTimeout, setInterval — event loop interaction',
+                  l: 'must',
+                },
+                { t: 'Microtask vs Macrotask queue', l: 'good', d: 'advanced' },
+                {
+                  t: 'AbortController — cancel fetch/async operations',
+                  l: 'good',
+                  d: 'advanced',
+                },
+              ],
+            },
+            {
+              label: 'DOM & Browser APIs',
+              diff: 'basic',
+              topics: [
+                {
+                  t: 'DOM traversal — querySelector, parentNode, children',
+                  l: 'must',
+                },
+                {
+                  t: 'Event listeners — bubbling, capturing, delegation',
+                  l: 'must',
+                  d: 'intermediate',
+                },
+                {
+                  t: 'event.preventDefault(), event.stopPropagation()',
+                  l: 'must',
+                },
+                {
+                  t: 'Fetch API — GET, POST, headers, error handling',
+                  l: 'must',
+                  d: 'intermediate',
+                },
+                {
+                  t: 'Local Storage, Session Storage, Cookies — differences',
+                  l: 'must',
+                },
+                {
+                  t: 'Never store JWT tokens in localStorage (security)',
+                  l: 'must',
+                  d: 'intermediate',
+                },
+                {
+                  t: 'Intersection Observer, Mutation Observer',
+                  l: 'good',
+                  d: 'intermediate',
+                },
+                {
+                  t: 'Web Workers — offload heavy tasks',
+                  l: 'good',
+                  d: 'advanced',
+                },
+                {
+                  t: 'Service Workers — PWA foundation',
+                  l: 'nice',
+                  d: 'advanced',
+                },
+              ],
+            },
+            {
+              label: 'Advanced JavaScript',
+              diff: 'advanced',
+              topics: [
+                {
+                  t: 'ES Modules (import/export) vs CommonJS (require)',
+                  l: 'must',
+                  d: 'intermediate',
+                },
+                {
+                  t: 'Module patterns (pre-ESM) — Revealing module pattern, why ESM solved a real problem',
+                  l: 'good',
+                  d: 'intermediate',
+                },
+                {
+                  t: 'Error types — TypeError, ReferenceError, SyntaxError, RangeError',
+                  l: 'must',
+                  d: 'intermediate',
+                },
+                {
+                  t: 'Error handling patterns — custom error classes (extends Error), wrapping 3rd party errors',
+                  l: 'good',
+                },
+                {
+                  t: 'Debounce and Throttle — implement both from scratch',
+                  l: 'must',
+                  n: 'Very common interview question',
+                },
+                {
+                  t: 'Deep clone vs shallow clone — structuredClone vs JSON trick',
+                  l: 'must',
+                  d: 'intermediate',
+                },
+                {
+                  t: 'JSON.parse / JSON.stringify — replacer/reviver, non-serializable values (undefined, functions, circular refs), deep clone caveats',
+                  l: 'good',
+                },
+                {
+                  t: 'Iterables & iteration protocol — Symbol.iterator, how for...of really works, custom iterables (distinct from generators)',
+                  l: 'must',
+                },
+                { t: 'Symbol, WeakMap, WeakSet, WeakRef', l: 'good' },
+                { t: 'Proxy and Reflect API', l: 'good' },
+                { t: 'Getter / Setter — Object.defineProperty', l: 'good' },
+                {
+                  t: 'Memory leaks — what causes them, how to avoid',
+                  l: 'good',
+                },
+                { t: 'Garbage collection — mark and sweep basics', l: 'good' },
+                { t: 'Tagged template literals', l: 'nice' },
+                {
+                  t: 'Regex basics — test(), match(), replace(), named capture groups',
+                  l: 'good',
+                },
+              ],
+            },
+            {
+              label: 'JS Engine Internals',
+              diff: 'advanced',
+              topics: [
+                { t: 'Execution context — global, function, eval', l: 'must' },
+                {
+                  t: 'Hoisting — variables AND function declarations',
+                  l: 'must',
+                  d: 'intermediate',
+                },
+                { t: 'Temporal Dead Zone (TDZ)', l: 'must', d: 'intermediate' },
+                { t: 'V8 engine — JIT compilation, hidden classes', l: 'good' },
+              ],
+            },
+          ],
+        },
+        {
+          id: 'react',
+          title: 'React.js — UI Layer',
+          accent: 'var(--accent-react)',
+          groups: [
+            {
+              label: 'Core React',
+              diff: 'basic',
+              topics: [
+                {
+                  t: 'JSX — how it compiles to React.createElement',
+                  l: 'must',
+                },
+                { t: 'Functional components — only way in 2026', l: 'must' },
+                {
+                  t: 'Props — passing, destructuring, default props',
+                  l: 'must',
+                },
+                { t: 'State — useState, lifting state up', l: 'must' },
+                {
+                  t: 'Controlled vs uncontrolled components (forms)',
+                  l: 'must',
+                  d: 'intermediate',
+                },
+                {
+                  t: 'Lists and keys — why keys matter for reconciliation',
+                  l: 'must',
+                  d: 'intermediate',
+                },
+                { t: 'Conditional rendering patterns', l: 'must' },
+              ],
+            },
+            {
+              label: 'Hooks Deep Dive',
+              diff: 'intermediate',
+              topics: [
+                { t: 'useState — batching, functional updates', l: 'must' },
+                {
+                  t: 'useEffect — dependency array, cleanup, common mistakes',
+                  l: 'must',
+                  n: 'Infinite loops from bad deps is a common interview topic',
+                },
+                {
+                  t: 'useRef — DOM access + persist value without re-render',
+                  l: 'must',
+                },
+                {
+                  t: 'useMemo and useCallback — when to use, when NOT to',
+                  l: 'must',
+                },
+                { t: 'useContext — avoid prop drilling', l: 'must' },
+                { t: 'useReducer — complex state logic', l: 'must' },
+                {
+                  t: 'Custom Hooks — useFetch, useDebounce, useLocalStorage',
+                  l: 'must',
+                },
+                { t: 'useLayoutEffect — when it runs vs useEffect', l: 'good' },
+                {
+                  t: 'useTransition, useDeferredValue (React 18+)',
+                  l: 'good',
+                  d: 'advanced',
+                },
+              ],
+            },
+            {
+              label: 'Performance & Patterns',
+              diff: 'advanced',
+              topics: [
+                { t: 'React.memo — prevent unnecessary re-renders', l: 'must' },
+                { t: 'Code splitting — React.lazy + Suspense', l: 'must' },
+                {
+                  t: 'React 18 — Concurrent mode, automatic batching',
+                  l: 'good',
+                },
+                { t: 'Error Boundaries', l: 'good' },
+                {
+                  t: 'Virtualization — react-window for long lists',
+                  l: 'good',
+                },
+                { t: 'Compound components, render props pattern', l: 'good' },
+                { t: 'Portals — render outside DOM tree', l: 'nice' },
+              ],
+            },
+            {
+              label: 'State Management',
+              diff: 'intermediate',
+              topics: [
+                {
+                  t: 'Context API — global light state',
+                  l: 'must',
+                  d: 'basic',
+                },
+                {
+                  t: 'Zustand — lightweight, preferred in 2026 startups',
+                  l: 'must',
+                },
+                {
+                  t: 'Redux Toolkit — enterprise projects',
+                  l: 'good',
+                  d: 'advanced',
+                },
+                {
+                  t: 'TanStack Query / React Query — server state',
+                  l: 'must',
+                  n: 'Replaces useEffect+fetch pattern. Handles caching, loading, errors',
+                  d: 'advanced',
+                },
+                {
+                  t: 'Jotai / Recoil — atomic state',
+                  l: 'nice',
+                  d: 'advanced',
+                },
+              ],
+            },
+            {
+              label: 'Ecosystem',
+              diff: 'intermediate',
+              topics: [
+                {
+                  t: 'React Router v6 — routes, nested routes, loaders',
+                  l: 'must',
+                },
+                {
+                  t: 'Axios vs Fetch — interceptors, base URL config',
+                  l: 'must',
+                },
+                {
+                  t: 'React Hook Form + Zod validation',
+                  l: 'must',
+                  d: 'advanced',
+                },
+                { t: 'Framer Motion — animations', l: 'nice' },
+              ],
+            },
+          ],
+        },
+        {
+          id: 'next',
+          title: 'Next.js — Full Stack Framework',
+          accent: 'var(--accent-next)',
+          groups: [
+            {
+              label: 'App Router (Current Standard)',
+              diff: 'intermediate',
+              topics: [
+                {
+                  t: 'App Router vs Pages Router — focus on App Router',
+                  l: 'must',
+                },
+                {
+                  t: "Server Components vs Client Components — 'use client'",
+                  l: 'must',
+                  n: 'THE most important Next.js concept in 2026',
+                },
+                {
+                  t: 'File-based routing — page.tsx, layout.tsx, loading.tsx, error.tsx',
+                  l: 'must',
+                  d: 'basic',
+                },
+                {
+                  t: 'Dynamic routes — [slug], [...slug], route groups',
+                  l: 'must',
+                },
+                {
+                  t: 'Data fetching in server components — fetch + caching',
+                  l: 'must',
+                },
+                {
+                  t: 'Server Actions — form submissions without API routes',
+                  l: 'must',
+                },
+                {
+                  t: 'Streaming and Suspense with RSC',
+                  l: 'good',
+                  d: 'advanced',
+                },
+                { t: 'Middleware — auth guards, redirects at edge', l: 'must' },
+                { t: 'API Routes — route.ts handlers', l: 'must' },
+                {
+                  t: 'Static Generation vs SSR vs ISR — when to use each',
+                  l: 'must',
+                },
+                { t: 'Image optimization — next/image', l: 'must', d: 'basic' },
+                { t: 'Metadata API — SEO, og:image generation', l: 'good' },
+                {
+                  t: 'Parallel routes, intercepting routes',
+                  l: 'nice',
+                  d: 'advanced',
+                },
+                { t: 'next/font, next/script optimizations', l: 'good' },
+                { t: 'Deployment — Vercel, Docker, self-hosted', l: 'must' },
+              ],
+            },
+          ],
+        },
+        {
+          id: 'node',
+          title: 'Node.js · Express · Auth',
+          accent: 'var(--accent-node)',
+          groups: [
+            {
+              label: 'Node.js Core',
+              diff: 'intermediate',
+              topics: [
+                {
+                  t: 'Node.js runtime — V8 + libuv, non-blocking I/O model',
+                  l: 'must',
+                },
+                { t: 'Event emitter pattern', l: 'must' },
+                {
+                  t: 'Streams — readable, writable, transform, piping',
+                  l: 'good',
+                  d: 'advanced',
+                },
+                {
+                  t: 'File system (fs) — sync vs async, fs.promises',
+                  l: 'must',
+                },
+                { t: 'Path, OS, URL built-in modules', l: 'must', d: 'basic' },
+                {
+                  t: 'process.env, process.argv, process.exit',
+                  l: 'must',
+                  d: 'basic',
+                },
+                {
+                  t: 'Child processes — exec, spawn, fork',
+                  l: 'good',
+                  d: 'advanced',
+                },
+                {
+                  t: 'Worker threads — CPU-intensive tasks',
+                  l: 'good',
+                  d: 'advanced',
+                },
+              ],
+            },
+            {
+              label: 'Express.js',
+              diff: 'intermediate',
+              topics: [
+                { t: 'Middleware — app.use(), order matters', l: 'must' },
+                { t: 'Router — modular routing, express.Router()', l: 'must' },
+                {
+                  t: 'Error handling middleware — (err, req, res, next)',
+                  l: 'must',
+                },
+                {
+                  t: 'Request validation — Zod or express-validator',
+                  l: 'must',
+                },
+                { t: 'File uploads — Multer middleware', l: 'must' },
+                { t: 'CORS — cors package, preflight requests', l: 'must' },
+                {
+                  t: 'Rate limiting — express-rate-limit',
+                  l: 'must',
+                  d: 'advanced',
+                },
+                {
+                  t: 'Helmet.js — HTTP security headers',
+                  l: 'must',
+                  d: 'advanced',
+                },
+              ],
+            },
+            {
+              label: 'Auth — JWT & Bcrypt',
+              diff: 'intermediate',
+              topics: [
+                { t: 'JWT — header.payload.signature structure', l: 'must' },
+                {
+                  t: 'Access token + Refresh token pattern',
+                  l: 'must',
+                  n: 'Refresh in httpOnly cookie, access token in memory',
+                },
+                {
+                  t: 'Bcrypt — saltRounds, compare, why slow hashing matters',
+                  l: 'must',
+                },
+                {
+                  t: 'OAuth2 — Google/GitHub login (Passport.js or next-auth)',
+                  l: 'must',
+                  d: 'advanced',
+                },
+                {
+                  t: 'Session-based vs token-based auth — tradeoffs',
+                  l: 'must',
+                },
+                { t: 'RBAC — Role Based Access Control', l: 'good' },
+                {
+                  t: '2FA — TOTP with speakeasy or similar',
+                  l: 'nice',
+                  d: 'advanced',
+                },
+              ],
+            },
+          ],
+        },
+        {
+          id: 'db',
+          title: 'Databases — SQL · MongoDB · Redis',
+          accent: 'var(--accent-db)',
+          groups: [
+            {
+              label: 'SQL / PostgreSQL',
+              diff: 'intermediate',
+              topics: [
+                {
+                  t: 'CRUD — SELECT, INSERT, UPDATE, DELETE',
+                  l: 'must',
+                  d: 'basic',
+                },
+                { t: 'JOINs — INNER, LEFT, RIGHT, FULL, self join', l: 'must' },
+                {
+                  t: 'Indexes — B-tree basics, when to avoid over-indexing',
+                  l: 'must',
+                },
+                { t: 'Transactions — ACID, COMMIT, ROLLBACK', l: 'must' },
+                {
+                  t: 'Constraints — PRIMARY KEY, FOREIGN KEY, UNIQUE',
+                  l: 'must',
+                },
+                {
+                  t: 'Aggregations — COUNT, SUM, AVG, GROUP BY, HAVING',
+                  l: 'must',
+                },
+                {
+                  t: 'Subqueries and CTEs (WITH clause)',
+                  l: 'good',
+                  d: 'advanced',
+                },
+                {
+                  t: 'Window functions — ROW_NUMBER, RANK, LAG, LEAD',
+                  l: 'good',
+                  d: 'advanced',
+                },
+                {
+                  t: 'Query optimization — EXPLAIN ANALYZE',
+                  l: 'good',
+                  d: 'advanced',
+                },
+                { t: 'Normalization — 1NF, 2NF, 3NF', l: 'good' },
+                {
+                  t: 'Prisma ORM — schema, migrations, relations',
+                  l: 'must',
+                  n: 'Most used ORM in Node/Next.js 2026 projects',
+                },
+              ],
+            },
+            {
+              label: 'MongoDB',
+              diff: 'intermediate',
+              topics: [
+                { t: 'Documents, collections, BSON', l: 'must', d: 'basic' },
+                {
+                  t: 'CRUD — find, insertOne, updateOne, deleteOne',
+                  l: 'must',
+                  d: 'basic',
+                },
+                {
+                  t: 'Aggregation pipeline — $match, $group, $lookup',
+                  l: 'must',
+                  d: 'advanced',
+                },
+                {
+                  t: 'Mongoose — Schema, Model, validation, middleware',
+                  l: 'must',
+                },
+                { t: 'SQL vs NoSQL — when to choose which', l: 'must' },
+              ],
+            },
+            {
+              label: 'Redis',
+              diff: 'advanced',
+              topics: [
+                {
+                  t: 'Key-value store, TTL, data structures',
+                  l: 'must',
+                  d: 'intermediate',
+                },
+                {
+                  t: 'Cache aside pattern — read from cache, fallback to DB',
+                  l: 'must',
+                  d: 'intermediate',
+                },
+                {
+                  t: 'Session storage with Redis',
+                  l: 'good',
+                  d: 'intermediate',
+                },
+                { t: 'Redis pub/sub — real-time features', l: 'good' },
+                { t: 'BullMQ — job queues with Redis', l: 'good' },
+              ],
+            },
+          ],
+        },
+        {
+          id: 'devops',
+          title: 'DevOps · Testing · Security',
+          accent: 'var(--accent-dev)',
+          groups: [
+            {
+              label: 'Version Control',
+              diff: 'basic',
+              topics: [
+                {
+                  t: 'Git branching strategy — GitFlow / trunk-based',
+                  l: 'must',
+                },
+                {
+                  t: 'Pull Requests, code reviews, merge conflicts',
+                  l: 'must',
+                },
+                { t: 'Git rebase vs merge', l: 'good', d: 'intermediate' },
+                { t: 'Conventional commits — feat, fix, chore', l: 'good' },
+              ],
+            },
+            {
+              label: 'Docker & Deployment',
+              diff: 'intermediate',
+              topics: [
+                {
+                  t: 'Docker — Dockerfile, images, containers, volumes',
+                  l: 'must',
+                },
+                { t: 'docker-compose — app + db + redis together', l: 'must' },
+                { t: 'Multi-stage builds, .dockerignore', l: 'good' },
+                {
+                  t: 'Environment variables — .env, secrets management',
+                  l: 'must',
+                },
+                {
+                  t: 'CI/CD — GitHub Actions (lint, test, deploy pipeline)',
+                  l: 'must',
+                },
+                {
+                  t: 'Cloud deployment — Vercel, Railway, Render, AWS EC2',
+                  l: 'must',
+                },
+                {
+                  t: 'Nginx — reverse proxy, load balancing basics',
+                  l: 'good',
+                },
+                {
+                  t: 'Kubernetes basics — pods, deployments, services',
+                  l: 'nice',
+                  d: 'advanced',
+                },
+              ],
+            },
+            {
+              label: 'Testing',
+              diff: 'intermediate',
+              topics: [
+                { t: 'Unit testing — Jest, Vitest', l: 'must' },
+                {
+                  t: 'Integration testing — supertest for Express APIs',
+                  l: 'good',
+                },
+                {
+                  t: 'E2E testing — Playwright or Cypress',
+                  l: 'good',
+                  d: 'advanced',
+                },
+                {
+                  t: 'React Testing Library — test behavior, not implementation',
+                  l: 'must',
+                },
+                {
+                  t: 'Mocking — jest.mock, MSW (Mock Service Worker)',
+                  l: 'good',
+                  d: 'advanced',
+                },
+              ],
+            },
+            {
+              label: 'Security Essentials',
+              diff: 'intermediate',
+              topics: [
+                {
+                  t: 'OWASP Top 10 — know top 5 and how to prevent each',
+                  l: 'must',
+                  d: 'advanced',
+                },
+                { t: 'SQL Injection — parameterized queries', l: 'must' },
+                {
+                  t: 'XSS — sanitize input, Content Security Policy',
+                  l: 'must',
+                },
+                { t: 'CSRF — SameSite cookies, CSRF tokens', l: 'must' },
+                { t: 'HTTPS, TLS, certificate basics', l: 'must' },
+                {
+                  t: 'Never commit .env to git — secrets management',
+                  l: 'must',
+                },
+              ],
+            },
+          ],
+        },
+        {
+          id: 'ai',
+          title: 'AI Integration — MCP · A2A · LLMs',
+          accent: 'var(--accent-ai)',
+          groups: [
+            {
+              label: 'LLM APIs',
+              diff: 'intermediate',
+              topics: [
+                {
+                  t: 'OpenAI / Anthropic API — chat completions, streaming',
+                  l: 'must',
+                },
+                {
+                  t: 'System prompts, few-shot examples, temperature, max_tokens',
+                  l: 'must',
+                },
+                { t: 'Token limits — chunking long documents', l: 'must' },
+                {
+                  t: 'Prompt engineering — chain of thought, JSON mode',
+                  l: 'must',
+                },
+                {
+                  t: 'Embeddings — vector representation of text',
+                  l: 'good',
+                  d: 'advanced',
+                },
+                {
+                  t: 'RAG — Retrieval Augmented Generation',
+                  l: 'good',
+                  n: 'Feed your own data to an LLM without fine-tuning',
+                  d: 'advanced',
+                },
+              ],
+            },
+            {
+              label: 'MCP — Model Context Protocol',
+              diff: 'advanced',
+              topics: [
+                {
+                  t: 'What is MCP — how AI agents connect to external tools',
+                  l: 'must',
+                  n: 'MCP is the USB-C of AI. Every agent framework is adopting it',
+                },
+                {
+                  t: "Building an MCP server — expose your app's data to AI",
+                  l: 'must',
+                },
+                {
+                  t: 'MCP resources, tools, prompts — three primitives',
+                  l: 'must',
+                },
+                {
+                  t: 'Connecting MCP servers to Claude, Cursor, VS Code',
+                  l: 'good',
+                },
+              ],
+            },
+            {
+              label: 'A2A Protocol',
+              diff: 'advanced',
+              topics: [
+                {
+                  t: 'Google A2A protocol — how agents talk to each other',
+                  l: 'good',
+                },
+                { t: 'Agent cards — declaring capabilities', l: 'good' },
+                { t: 'Multi-agent orchestration basics', l: 'nice' },
+              ],
+            },
+            {
+              label: 'AI Frameworks & Tools',
+              diff: 'advanced',
+              topics: [
+                {
+                  t: 'Vercel AI SDK — streaming AI in Next.js apps',
+                  l: 'must',
+                },
+                { t: 'LangChain.js / LangGraph — agent workflows', l: 'good' },
+                { t: 'Vector databases — Pinecone, pgvector', l: 'good' },
+                { t: 'Ollama — run LLMs locally for development', l: 'good' },
+                { t: 'OpenAI Assistants API / function calling', l: 'good' },
+                { t: 'Fine-tuning vs RAG — when each makes sense', l: 'nice' },
+              ],
+            },
+          ],
+        },
+      ];
+
+      // ═══════════════════════════════════════════════════════════════
+      //  STATE
+      // ═══════════════════════════════════════════════════════════════
+      let state = {}; // { topicKey: true/false }
+      let customTopics = {}; // { sectionId: [{t, l, n, d}] }
+      let currentFilter = 'all';
+      let collapsed = {};
+
+      const SK = 'fsd_progress_v1';
+      const CK = 'fsd_custom_v1';
+      const COK = 'fsd_collapsed_v1';
+
+      function load() {
+        try {
+          state = JSON.parse(localStorage.getItem(SK) || '{}');
+        } catch (e) {
+          state = {};
+        }
+        try {
+          customTopics = JSON.parse(localStorage.getItem(CK) || '{}');
+        } catch (e) {
+          customTopics = {};
+        }
+        try {
+          collapsed = JSON.parse(localStorage.getItem(COK) || '{}');
+        } catch (e) {
+          collapsed = {};
+        }
+      }
+      function save() {
+        localStorage.setItem(SK, JSON.stringify(state));
+        localStorage.setItem(CK, JSON.stringify(customTopics));
+        localStorage.setItem(COK, JSON.stringify(collapsed));
+      }
+
+      function topicKey(sectionId, groupLabel, text) {
+        return `${sectionId}||${groupLabel}||${text}`;
+      }
+
+      // ═══════════════════════════════════════════════════════════════
+      //  RENDER
+      // ═══════════════════════════════════════════════════════════════
+      function render() {
+        const root = document.getElementById('sections-root');
+        root.innerHTML = '';
+        SECTIONS.forEach((sec) => {
+          const allTopics = getAllTopics(sec);
+          const done = allTopics.filter((k) => state[k.key]).length;
+          const total = allTopics.length;
+          const pct = total ? Math.round((done / total) * 100) : 0;
+
+          const div = document.createElement('div');
+          div.className = 'section' + (collapsed[sec.id] ? ' collapsed' : '');
+          div.id = 'sec-' + sec.id;
+          div.innerHTML = `
+      <div class="section-header" onclick="toggleSection('${sec.id}')">
+        <div class="section-accent" style="background:${sec.accent}"></div>
+        <div class="section-title">${sec.title}</div>
+        <div class="section-meta">
+          <span class="section-prog"><b>${done}</b>/${total}</span>
+          <div class="mini-bar">
+            <div class="mini-fill" style="background:${sec.accent};width:${pct}%"></div>
+          </div>
+          <span class="chevron">▼</span>
+        </div>
+      </div>
+      <div class="topic-list" id="tl-${sec.id}"></div>
+    `;
+          root.appendChild(div);
+          renderTopicList(sec, div.querySelector('.topic-list'));
+        });
+        updateGlobal();
+      }
+
+      function getAllTopics(sec) {
+        const all = [];
+        sec.groups.forEach((g) => {
+          g.topics.forEach((tp) =>
+            all.push({ key: topicKey(sec.id, g.label, tp.t), ...tp })
+          );
+        });
+        (customTopics[sec.id] || []).forEach((tp) => {
+          all.push({ key: topicKey(sec.id, 'Custom', tp.t), ...tp });
+        });
+        return all;
+      }
+
+      function renderTopicList(sec, container) {
+        const search =
+          document.getElementById('search')?.value?.toLowerCase() || '';
+
+        // groups
+        sec.groups.forEach((g) => {
+          const filtered = g.topics.filter((tp) => {
+            const diff = tp.d || g.diff || 'basic';
+            return matchFilter(
+              topicKey(sec.id, g.label, tp.t),
+              tp,
+              diff,
+              search
+            );
+          });
+          if (!filtered.length) return;
+
+          const gl = document.createElement('div');
+          gl.className = 'group-label';
+          gl.textContent = g.label;
+          container.appendChild(gl);
+
+          filtered.forEach((tp) => {
+            const key = topicKey(sec.id, g.label, tp.t);
+            const diff = tp.d || g.diff || 'basic';
+            container.appendChild(
+              makeTopicRow(key, tp, diff, sec.id, g.label, false)
+            );
+          });
+        });
+
+        // custom
+        const custom = customTopics[sec.id] || [];
+        const filtCustom = custom.filter((tp) => {
+          const diff = tp.d || 'basic';
+          return matchFilter(
+            topicKey(sec.id, 'Custom', tp.t),
+            tp,
+            diff,
+            search
+          );
+        });
+        if (filtCustom.length) {
+          const gl = document.createElement('div');
+          gl.className = 'group-label';
+          gl.textContent = 'My Custom Topics';
+          container.appendChild(gl);
+          filtCustom.forEach((tp) => {
+            const key = topicKey(sec.id, 'Custom', tp.t);
+            const diff = tp.d || 'basic';
+            container.appendChild(
+              makeTopicRow(key, tp, diff, sec.id, 'Custom', true)
+            );
+          });
+        }
+
+        // add row
+        const addRow = document.createElement('div');
+        addRow.className = 'add-topic-row';
+        addRow.innerHTML = `
+    <input class="add-input" id="add-input-${sec.id}" placeholder="+ add your own topic..." onkeydown="addTopicEnter(event,'${sec.id}')"/>
+    <select class="add-level-select" id="add-level-${sec.id}">
+      <option value="must">Must</option>
+      <option value="good">Good</option>
+      <option value="nice">Nice</option>
+    </select>
+    <select class="add-level-select" id="add-diff-${sec.id}">
+      <option value="basic">Basic</option>
+      <option value="intermediate">Intermediate</option>
+      <option value="advanced">Advanced</option>
+    </select>
+    <button class="add-btn" onclick="addTopic('${sec.id}')">Add</button>
+  `;
+        container.appendChild(addRow);
+      }
+
+      function matchFilter(key, tp, diff, search) {
+        if (search && !tp.t.toLowerCase().includes(search)) return false;
+        if (currentFilter === 'pending' && state[key]) return false;
+        if (currentFilter === 'done' && !state[key]) return false;
+        if (currentFilter === 'must' && tp.l !== 'must') return false;
+        if (currentFilter === 'good' && tp.l !== 'good') return false;
+        if (currentFilter === 'nice' && tp.l !== 'nice') return false;
+        if (currentFilter === 'basic' && diff !== 'basic') return false;
+        if (currentFilter === 'intermediate' && diff !== 'intermediate')
+          return false;
+        if (currentFilter === 'advanced' && diff !== 'advanced') return false;
+        return true;
+      }
+
+      function makeTopicRow(key, tp, diff, secId, groupLabel, isDeletable) {
+        const done = !!state[key];
+        const row = document.createElement('div');
+        row.className = 'topic-row' + (done ? ' done' : '');
+        row.dataset.key = key;
+        row.innerHTML = `
+    <div class="topic-check"></div>
+    <div class="level-dot ${tp.l}"></div>
+    <div class="topic-text">
+      ${tp.t}
+      ${tp.n ? `<span class="topic-note">↳ ${tp.n}</span>` : ''}
+    </div>
+    <span class="diff-tag ${diff}">${diff}</span>
+    <span class="level-tag ${tp.l}">${tp.l}</span>
+    ${isDeletable ? `<span style="font-size:11px;color:var(--muted);cursor:pointer;margin-left:4px" onclick="deleteTopic('${secId}','${tp.t.replace(/'/g, "\\'")}',event)">✕</span>` : ''}
+  `;
+        row.addEventListener('click', (e) => {
+          if (
+            e.target.closest('.add-btn') ||
+            e.target.closest('.add-input') ||
+            e.target.closest('.add-level-select') ||
+            (e.target.tagName === 'SPAN' && e.target.textContent === '✕')
+          )
+            return;
+          toggleTopic(key);
+        });
+        return row;
+      }
+
+      // ═══════════════════════════════════════════════════════════════
+      //  ACTIONS
+      // ═══════════════════════════════════════════════════════════════
+      function toggleTopic(key) {
+        state[key] = !state[key];
+        save();
+        render();
+      }
+
+      function toggleSection(id) {
+        collapsed[id] = !collapsed[id];
+        save();
+        const el = document.getElementById('sec-' + id);
+        if (el) el.classList.toggle('collapsed', collapsed[id]);
+      }
+
+      function addTopicEnter(e, secId) {
+        if (e.key === 'Enter') addTopic(secId);
+      }
+
+      function addTopic(secId) {
+        const input = document.getElementById('add-input-' + secId);
+        const levelSel = document.getElementById('add-level-' + secId);
+        const diffSel = document.getElementById('add-diff-' + secId);
+        const text = input.value.trim();
+        if (!text) return;
+        if (!customTopics[secId]) customTopics[secId] = [];
+        customTopics[secId].push({
+          t: text,
+          l: levelSel.value,
+          d: diffSel.value,
+        });
+        input.value = '';
+        save();
+        render();
+      }
+
+      function deleteTopic(secId, text, e) {
+        e.stopPropagation();
+        if (!customTopics[secId]) return;
+        customTopics[secId] = customTopics[secId].filter((tp) => tp.t !== text);
+        save();
+        render();
+      }
+
+      function updateGlobal() {
+        let total = 0,
+          done = 0;
+        SECTIONS.forEach((sec) => {
+          const all = getAllTopics(sec);
+          total += all.length;
+          done += all.filter((k) => state[k.key]).length;
+        });
+        const pct = total ? Math.round((done / total) * 100) : 0;
+        document.getElementById('gp-fill').style.width = pct + '%';
+        document.getElementById('gp-pct').textContent = pct + '%';
+        document.getElementById('hdr-done').textContent = done;
+        document.getElementById('hdr-total').textContent = total;
+      }
+
+      function applyFilters() {
+        render();
+      }
+
+      function resetAll() {
+        if (
+          confirm(
+            'Reset ALL progress? Your custom topics will stay but all checkmarks will be cleared.'
+          )
+        ) {
+          state = {};
+          save();
+          render();
+        }
+      }
+
+      // filter buttons
+      document.querySelectorAll('.filter-btn').forEach((btn) => {
+        btn.addEventListener('click', function () {
+          document
+            .querySelectorAll('.filter-btn')
+            .forEach((b) => b.classList.remove('active'));
+          this.classList.add('active');
+          currentFilter = this.dataset.filter;
+          render();
+        });
+      });
+
+      // ═══════════════════════════════════════════════════════════════
+      //  INIT
+      // ═══════════════════════════════════════════════════════════════
+      load();
+      render();
+    </script>
+  </body>
+</html>
